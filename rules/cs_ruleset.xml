@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="PM-CS-3.1">
+    <description>ProcessMaker 3.1 CodeSniffer Ruleset
+    </description>
+    <rule ref="Generic.Classes.DuplicateClassName"/>
+    <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
+    <rule ref="Generic.CodeAnalysis.ForLoopWithTestFunctionCall">
+        <type>warning</type>
+    </rule>
+    <rule ref="Generic.CodeAnalysis.JumbledIncrementer"/>
+    <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
+    <rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier"/>
+    <rule ref="Generic.Commenting.Todo">
+        <type>warning</type>
+    </rule>
+    <rule ref="Generic.Commenting.Fixme">
+        <type>warning</type>
+    </rule>
+    <rule ref="Generic.ControlStructures.InlineControlStructure">
+        <properties>
+            <property name="error" value="false"/>
+        </properties>
+    </rule>
+    <rule ref="Generic.Files.LineEndings"/>
+    <rule ref="Generic.Functions.CallTimePassByReference"/>
+    <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
+    <rule ref="Generic.NamingConventions.CamelCapsFunctionName"/>
+    <rule ref="Generic.PHP.DeprecatedFunctions"/>
+    <rule ref="Generic.PHP.DisallowShortOpenTag"/>
+    <rule ref="Generic.PHP.ForbiddenFunctions"/>
+    <rule ref="Generic.PHP.NoSilencedErrors"/>
+    <rule ref="Generic.WhiteSpace.DisallowTabIndent">
+        <type>warning</type>
+    </rule>
+    <rule ref="MySource.PHP.GetRequestData"/>
+    <rule ref="PEAR.Commenting.InlineComment"/>
+    <rule ref="PEAR.Functions.FunctionDeclaration">
+        <type>warning</type>
+    </rule>
+    <rule ref="PEAR.Functions.ValidDefaultValue"/>
+    <rule ref="PEAR.NamingConventions.ValidFunctionName"/>
+    <rule ref="PEAR.NamingConventions.ValidVariableName"/>
+    <rule ref="PEAR.WhiteSpace.ScopeClosingBrace">
+        <type>warning</type>
+    </rule>
+    <rule ref="PSR1.Files.SideEffects"/>
+    <rule ref="PSR2.ControlStructures.ElseIfDeclaration"/>
+    <rule ref="PSR2.Files.EndFileNewline">
+        <type>warning</type>
+    </rule>
+    <rule ref="PSR2.Methods.MethodDeclaration"/>
+    <rule ref="Squiz.PHP.CommentedOutCode">
+        <type>error</type>
+    </rule>
+    <rule ref="Squiz.PHP.DisallowMultipleAssignments"/>
+    <rule ref="Squiz.PHP.DiscouragedFunctions"/>
+    <rule ref="Squiz.PHP.ForbiddenFunctions"/>
+    <rule ref="Squiz.PHP.GlobalKeyword"/>
+    <rule ref="Squiz.PHP.InnerFunctions"/>
+    <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
+    <rule ref="Squiz.PHP.NonExecutableCode"/>
+    <rule ref="Squiz.Scope.MemberVarScope">
+        <type>error</type>
+    </rule>
+    <rule ref="Squiz.Scope.MethodScope"/>
+    <rule ref="Squiz.Scope.StaticThisUsage"/>
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
+        <type>warning</type>
+    </rule>
+</ruleset>

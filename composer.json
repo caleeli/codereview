@@ -1,0 +1,17 @@
+{
+    "name": "davidc/codereview",
+    "description": "Review the stashed code using phpcs and phpmd.",
+    "authors": [
+        {
+            "name": "caleeli",
+            "email": "davidcallizaya@gmail.com"
+        }
+    ],
+    "bin":[
+        "bin/codereview.php"
+    ],
+    "require": {
+        "squizlabs/php_codesniffer": "^2.3",
+        "phpmd/phpmd": "^2.3"
+    }
+}
