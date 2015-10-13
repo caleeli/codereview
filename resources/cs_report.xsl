@@ -18,7 +18,7 @@
         <html>
             <head>
                 <title>phpcs.xsl</title>
-                <link href="./phpcs.css" rel="stylesheet" type="text/css" />
+                <link href="./codereview.css" rel="stylesheet" type="text/css" />
             </head>
             <body>
                 <table>
