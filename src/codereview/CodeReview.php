@@ -75,7 +75,6 @@ class CodeReview
         $xml->load($this->xmlReport);
 
         $modifiedLines = $this->getModifiedLines();
-        print_r($modifiedLines);
         $this->diffWithGit($xml, $modifiedLines);
 
         $xsl = new DOMDocument;
@@ -152,10 +151,5 @@ class CodeReview
         $files = $this->loadFiles();
         $this->phpcs($files);
         $this->generateReport();
-    }
-    
-    function adh(){
-        $b= $a/0;
-        return;
     }
 }
