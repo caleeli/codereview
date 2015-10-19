@@ -23,14 +23,16 @@ class CodeReview
     protected $csRuleset;
     protected $xslReport;
     protected $cssReport;
+    protected $diffLines;
     protected $htmlReport = 'codereview.html';
 
-    public function __construct($mdRuleset, $csRuleset, $xslReport, $cssReport)
+    public function __construct($mdRuleset, $csRuleset, $xslReport, $cssReport, $diffLines)
     {
         $this->mdRuleset = $mdRuleset;
         $this->csRuleset = $csRuleset;
         $this->xslReport = $xslReport;
         $this->cssReport = $cssReport;
+        $this->diffLines = $diffLines;
     }
 
     protected function loadFiles()
@@ -56,7 +58,6 @@ class CodeReview
     {
         $cmdMD = 'phpmd ' . implode(',', $files) . ' xml ' . escapeshellarg($this->mdRuleset);
         echo "Running MessDetector...\n";
-        //echo "$cmdMD\n";
         passthru($cmdMD);
     }
 
@@ -64,7 +65,6 @@ class CodeReview
     {
         $cmdCS = 'phpcs --standard=' . escapeshellarg($this->csRuleset) . ' --report-xml=' . escapeshellarg($this->xmlReport) . ' ' . implode(' ', $files);
         echo "Running CodeSniffer...\n";
-        //echo "$cmdCS\n";
         passthru($cmdCS);
     }
 
@@ -73,6 +73,10 @@ class CodeReview
         // Open XML result
         $xml = new DOMDocument;
         $xml->load($this->xmlReport);
+
+        $modifiedLines = $this->getModifiedLines();
+        print_r($modifiedLines);
+        $this->diffWithGit($xml, $modifiedLines);
 
         $xsl = new DOMDocument;
         $xsl->load($this->xslReport);
@@ -84,14 +88,74 @@ class CodeReview
         $html = $proc->transformToXML($xml);
         file_put_contents($this->htmlReport, $html);
 
-        copy($this->cssReport, dirname($this->htmlReport).'/codereview.css');
-        
-        exec('xdg-open '.$this->htmlReport);
+        copy($this->cssReport, dirname($this->htmlReport) . '/codereview.css');
+
+        exec('xdg-open ' . $this->htmlReport);
     }
-    
-    public function run(){
+
+    protected function getModifiedLines()
+    {
+        echo "Checking changes...\n";
+        $cmdDiff = 'git diff | ' . $this->diffLines;
+        ob_start();
+        passthru($cmdDiff);
+        $cmdDiffResult = ob_get_contents();
+        ob_end_clean();
+        $cmdDiffResultLines = explode("\n", $cmdDiffResult);
+
+        $modifiedLines = [];
+        foreach ($cmdDiffResultLines as $line) {
+            if (empty($line)) {
+                continue;
+            }
+            list($file, $lineNumber, $content) = explode(":", $line, 3);
+            if (substr($content, 0, 1) === '+') {
+                $modifiedLines[$file][] = $lineNumber;
+            }
+        }
+        return $modifiedLines;
+    }
+
+    protected function diffWithGit(DOMDocument $xml, $modifiedLines)
+    {
+        $diffErrors = 0;
+        $diffWarnings = 0;
+        $path = realpath('.');
+        foreach ($xml->getElementsByTagName('file') as $file) {
+            $fileRelative = substr($file->getAttribute('name'), strlen($path) + 1);
+            $modifiedLinesFile = $modifiedLines[$fileRelative];
+            if (isset($modifiedLinesFile)) {
+                foreach ($file->childNodes as $issue) {
+                    if ($issue instanceof \DOMText) {
+                        continue;
+                    }
+                    $line = $issue->getAttribute("line");
+                    if (array_search($line, $modifiedLinesFile) !== false) {
+                        $issue->setAttribute('is_new', 'true');
+                        if ($issue->nodeName === 'error') {
+                            $diffErrors++;
+                        } elseif ($issue->nodeName === 'warning') {
+                            $diffWarnings++;
+                        }
+                    } else {
+                        $issue->setAttribute('is_new', 'false');
+                    }
+                }
+            }
+            $file->setAttribute('diff_errors', $diffErrors);
+            $file->setAttribute('diff_warnings', $diffWarnings);
+        }
+    }
+
+    public function run()
+    {
         $files = $this->loadFiles();
         $this->phpcs($files);
         $this->generateReport();
+    }
+    
+    function adh(){
+        $b= $a/0;
+        return;
     }
 }

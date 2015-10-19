@@ -21,7 +21,8 @@
                 <link href="./codereview.css" rel="stylesheet" type="text/css" />
             </head>
             <body>
-                <table>
+                <input type="checkbox" checked="checked" onchange="document.getElementById('table1').className=this.checked?'only-new':''"/> Only new issues
+                <table id="table1" class="only-new">
                     <thead>
                         <tr>
                             <th class="file">Name</th>
@@ -36,15 +37,19 @@
                                     <xsl:value-of select="@name" />
                                 </td>
                                 <td class="errors">
-                                    <xsl:value-of select="@errors" />
+                                    <xsl:value-of select="@diff_errors" /> / <xsl:value-of select="@errors" />
                                 </td>
                                 <td class="warnings">
-                                    <xsl:value-of select="@warnings" />
+                                    <xsl:value-of select="@diff_warnings" /> / <xsl:value-of select="@warnings" />
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="3">
                                     <xsl:for-each select="error">
+                                        <div class="@is_new='true'">
+                                        <xsl:if test="@is_new='true'">
+                                            (NEW)
+                                        </xsl:if>
                                         <span class="error">Error: </span>
                                         <xsl:value-of select="self::node()"/>
                                          
@@ -62,6 +67,9 @@
                                         <hr />
                                     </xsl:for-each>
                                     <xsl:for-each select="warning">
+                                        <xsl:if test="@is_new='true'">
+                                            (NEW)
+                                        </xsl:if>
                                         <span class="warning">Warning: </span>
                                         <xsl:value-of select="self::node()"/>
                                          
