@@ -20,31 +20,35 @@ th.file {
     width: 80%;
     color: green
 }
-th.notes {
+.notes {
     width: 10%;
     color: blue
 }
 span {
     font-weight: bold
 }
-span.error {
+.error {
     color: red
 }
-span.warning {
+.warning {
     color: orange
 }
 td.file {
     font-weight: bold;
 }
-td.errors {
+.errors {
     font-weight: bold;
     color: red;
 }
-td.warnings {
+.warnings {
     font-weight: bold;
     color: blue;
 }
-tr.header td {
+.header td {
     background-color:lightsalmon;
     padding:4px 8px;
+}
+.errors-warnings {
+    white-space: pre;
+    background-color: khaki;
 }

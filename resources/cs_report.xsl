@@ -47,24 +47,25 @@
                                 <td colspan="3">
                                     <xsl:for-each select="error">
                                         <div class="@is_new='true'">
-                                        <xsl:if test="@is_new='true'">
-                                            (NEW)
-                                        </xsl:if>
-                                        <span class="error">Error: </span>
-                                        <xsl:value-of select="self::node()"/>
+                                            <xsl:if test="@is_new='true'" >
+                                                (NEW)
+                                            </xsl:if>
+                                            <span class="error">Error: </span>
+                                            <xsl:value-of select="self::node()"/>
                                          
  
-                                        <b> Line:</b>
-                                        <xsl:value-of select="@line" />
+                                            <b> Line:</b>
+                                            <xsl:value-of select="@line" />
                                          
  
-                                        <b> Column:</b>
-                                        <xsl:value-of select="@column" />
+                                            <b> Column:</b>
+                                            <xsl:value-of select="@column" />
                                          
  
-                                        <b> Code:</b>
-                                        <xsl:value-of select="@source" />
-                                        <hr />
+                                            <b> Code:</b>
+                                            <xsl:value-of select="@source" />
+                                            <hr />
+                                        </div>
                                     </xsl:for-each>
                                     <xsl:for-each select="warning">
                                         <xsl:if test="@is_new='true'">
@@ -91,6 +92,9 @@
                         </xsl:for-each>
                     </tbody>
                 </table>
+                <div class="errors-warnings">
+                    <xsl:value-of select="$errorsWarnings" />
+                </div>
             </body>
         </html>
     </xsl:template>

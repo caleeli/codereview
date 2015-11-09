@@ -58,17 +58,25 @@ class CodeReview
     {
         $cmdMD = 'phpmd ' . implode(',', $files) . ' xml ' . escapeshellarg($this->mdRuleset);
         echo "Running MessDetector...\n";
+        ob_start();
         passthru($cmdMD);
+        $errorsWarnings = ob_get_contents();
+        ob_end_clean();
+        return $errorsWarnings;
     }
 
     protected function phpcs($files)
     {
         $cmdCS = 'phpcs --standard=' . escapeshellarg($this->csRuleset) . ' --report-xml=' . escapeshellarg($this->xmlReport) . ' ' . implode(' ', $files);
         echo "Running CodeSniffer...\n";
+        ob_start();
         passthru($cmdCS);
+        $errorsWarnings = ob_get_contents();
+        ob_end_clean();
+        return $errorsWarnings;
     }
 
-    protected function generateReport()
+    protected function generateReport($errorsWarnings)
     {
         // Open XML result
         $xml = new DOMDocument;
@@ -83,6 +91,7 @@ class CodeReview
         // Config xslt processor
         $proc = new XSLTProcessor;
         $proc->importStyleSheet($xsl);
+        //$proc->setParameter('', 'errorsWarnings', $errorsWarnings);
 
         $html = $proc->transformToXML($xml);
         file_put_contents($this->htmlReport, $html);
@@ -149,7 +158,7 @@ class CodeReview
     public function run()
     {
         $files = $this->loadFiles();
-        $this->phpcs($files);
-        $this->generateReport();
+        $errorsWarnings = $this->phpcs($files);
+        $this->generateReport($errorsWarnings);
     }
 }
