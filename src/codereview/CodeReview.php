@@ -91,7 +91,7 @@ class CodeReview
         // Config xslt processor
         $proc = new XSLTProcessor;
         $proc->importStyleSheet($xsl);
-        //$proc->setParameter('', 'errorsWarnings', $errorsWarnings);
+        $proc->setParameter('', 'errorsWarnings', $errorsWarnings);
 
         $html = $proc->transformToXML($xml);
         file_put_contents($this->htmlReport, $html);
@@ -138,16 +138,16 @@ class CodeReview
                         continue;
                     }
                     $line = $issue->getAttribute("line");
+                    $isNew = 'false';
                     if (array_search($line, $modifiedLinesFile) !== false) {
-                        $issue->setAttribute('is_new', 'true');
+                        $isNew = 'true';
                         if ($issue->nodeName === 'error') {
                             $diffErrors++;
                         } elseif ($issue->nodeName === 'warning') {
                             $diffWarnings++;
                         }
-                    } else {
-                        $issue->setAttribute('is_new', 'false');
                     }
+                    $issue->setAttribute('is_new', $isNew);
                 }
             }
             $file->setAttribute('diff_errors', $diffErrors);
