@@ -8,7 +8,9 @@
         }
     ],
     "bin":[
-        "bin/codereview.php"
+        "bin/codereview.php",
+        "bin/phpcs.php",
+        "bin/phpmd.php"
     ],
     "require": {
         "squizlabs/php_codesniffer": "*",
