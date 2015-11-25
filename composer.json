@@ -13,8 +13,6 @@
         "bin/phpmd.php"
     ],
     "require": {
-        "squizlabs/php_codesniffer": "*",
-        "phpmd/phpmd": "*"
     },
     "autoload": {
         "psr-4": {
