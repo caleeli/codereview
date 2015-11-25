@@ -1,5 +1,4 @@
 <?php
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -57,6 +56,9 @@ class CodeReview
 
     protected function phpmd($files)
     {
+        if (count($files) == 0) {
+            return '';
+        }
         $cmdMD = 'phpmd ' . implode(',', $files) . ' xml ' . escapeshellarg($this->mdRuleset);
         if (!$this->silent) {
             echo "Running MessDetector...\n";
@@ -70,6 +72,9 @@ class CodeReview
 
     protected function phpcs($files)
     {
+        if (count($files) == 0) {
+            return '';
+        }
         $cmdCS = 'phpcs --standard=' . escapeshellarg($this->csRuleset) .
             ' --standard=PSR2 --report-xml=' . escapeshellarg($this->xmlReport) . ' ' . implode(' ', $files);
         if (!$this->silent) {
@@ -82,13 +87,34 @@ class CodeReview
         return $errorsWarnings;
     }
 
-    protected function generateReport($errorsWarnings)
+    public function getPhpCsLine($arguments)
+    {
+        $modifiedLines = $this->getModifiedLines();
+        $files = array_keys($modifiedLines);
+        if (count($files) == 0) {
+            return '';
+        }
+        $cmdCS = 'phpcs ' . implode(' ', $arguments) . ' ' . implode(' ', $files);
+        return $cmdCS;
+    }
+    
+    public function getPhpMdLine($arguments)
+    {
+        $modifiedLines = $this->getModifiedLines();
+        $files = array_keys($modifiedLines);
+        if (count($files) == 0) {
+            return '';
+        }
+        $cmdMD = 'phpmd ' . implode(',', $files) . ' ' . implode(' ', $arguments);
+        return $cmdMD;
+    }
+
+    protected function generateReport($errorsWarnings, $modifiedLines)
     {
         // Open XML result
         $xml = new DOMDocument;
         $xml->load($this->xmlReport);
 
-        $modifiedLines = $this->getModifiedLines();
         $this->diffWithGit($xml, $modifiedLines);
 
         $xsl = new DOMDocument;
@@ -110,11 +136,9 @@ class CodeReview
         if (!$this->silent) {
             echo "Checking changes...\n";
         }
-        $cmdDiff = 'git diff | ' . $this->diffLines;
-        ob_start();
-        passthru($cmdDiff);
-        $cmdDiffResult = ob_get_contents();
-        ob_end_clean();
+        //orgin->colosa/processmaker
+        $cmdDiff = 'git diff origin/master | ' . $this->diffLines;
+        $cmdDiffResult = shell_exec($cmdDiff);
         $cmdDiffResultLines = explode("\n", $cmdDiffResult);
 
         $modifiedLines = [];
